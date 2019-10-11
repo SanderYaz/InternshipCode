@@ -1,0 +1,93 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Proje Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+      <hr>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Proje Adı</mat-label>
+          <input matInput placeholder="Proje İsmi Giriniz" type="text" id="project_name"
+                 [(ngModel)]="selectedProject.name">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label> Şirket Adını Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedProject.company">
+            <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}} </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!--
+            <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Tesis Adını Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedProject.facility">
+            <div *ngFor="let facility of facilities">
+              <mat-option *ngIf="(selectedProject.company == facility.company)"
+                          value="{{facility.id}}">{{facility.name}} </mat-option>
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+       -->
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Balık Türü Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedProject.fish_type" multiple>
+            <mat-option *ngFor="let fishtype of fishtypes" [value]="fishtype.id">{{fishtype.name}} </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Kapasite" type="text"
+                 [(ngModel)]="selectedProject.capacity">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Kalan Kapasite" type="text"
+                 [(ngModel)]="selectedProject.remaining_capacity" id="remainin_capacity">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput maxlength="11" placeholder="Devir Sayısı" id="facility_phone" type="number"
+                 [(ngModel)]="selectedProject.turnover">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput maxlength="50" placeholder="Proje Dökümantasyon numarası" type="text"
+                 [(ngModel)]="selectedProject.project_doc_no">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="SAP Proje Kodu" type="number" id="facility_koordinat"
+                 [(ngModel)]="selectedProject.SAP_project_code">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Açıklama</mat-label>
+          <input matInput placeholder="Açıklama Giriniz" type="text"
+                 [(ngModel)]="selectedProject.description">
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedProject.id != -1"
+                  (click)="createProject()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedProject.id != -1"
+                  onClick="window.location.reload()"><strong>Yenile</strong></button>
+        </div>
+      </div>
+    </div>

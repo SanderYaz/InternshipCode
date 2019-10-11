@@ -1,0 +1,127 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Tank | Kafes Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Şirket İsmi Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedTank.company">
+            <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+      <mat-form-field class="form-container">
+        <mat-label>Tesis İsmi Seçiniz</mat-label>
+        <mat-select [(ngModel)]="selectedTank.facility">
+          <div *ngFor="let facility of facilities"><mat-option *ngIf="(selectedTank.company == facility.company)" value="{{facility.id}}">{{facility.name}}</mat-option></div>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+      <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Birim İsmi Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedTank.unit">
+              <div *ngFor="let unit of units"><mat-option *ngIf="(selectedTank.facility == unit.facility)" value="{{unit.id}}">{{unit.name}}</mat-option></div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Tank İsmi Giriniz" type="text" maxlength="60" [(ngModel)]="selectedTank.name"
+                 id="tankname">
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-select placeholder="Kafes Türünü Seçiniz" type="text"
+                 [(ngModel)]="selectedTank.type" id="tank_type">
+            <mat-option value="Tank">Tank</mat-option>
+            <mat-option value="Cage">Cage</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Tank | Kafes Şekli Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedTank.shape_id">
+              <mat-option *ngFor="let shape of shapes" value="{{shape.id}}">{{shape.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-select placeholder="Proje Mi?" type="text" [(ngModel)]="selectedTank.is_project">
+            <mat-option value= 1> Evet </mat-option>
+            <mat-option value= 0> Hayır </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+          <div class="form-group" *ngIf="!(selectedTank.is_project == 0)">
+              <mat-form-field class="form-container">
+                <mat-label>Proje Adı</mat-label>
+                <mat-select [(ngModel)]="selectedTank.project">
+                  <mat-option *ngFor="let project of projects" value="{{project.id}}">{{project.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+          </div>
+
+        <div class="form-group">
+            <mat-form-field class="form-container">
+                <input matInput placeholder="Oluşturmak İstediğiniz Kafes Sayısını Giriniz" id="tanknumber"  [(ngModel)]="selectedTank.tanknumber" type="number" >
+            </mat-form-field>
+        </div>
+
+      <div class="row">
+        <div class="form-group col-sm-2">
+            <mat-form-field class="form-container">
+                <input matInput placeholder="Genişlik Giriniz" id="weight" type="number" [(ngModel)]="selectedTank.weight">
+            </mat-form-field>
+        </div>
+        <div class="form-group col-sm-2">
+            <mat-form-field class="form-container">
+                <input matInput placeholder="Uzunluk Giriniz" id="length" type="number" [(ngModel)]="selectedTank.length">
+            </mat-form-field>
+        </div>
+        <div class="form-group col-sm-2">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Derinlik(yükseklik) Giriniz" id="height" type="number" [(ngModel)]="selectedTank.height">
+          </mat-form-field>
+        </div>
+        <div class="form-group col-sm-2">
+            <mat-form-field class="form-container">
+                <input matInput placeholder="Çap Giriniz" id="diameter" type="number" [(ngModel)]="selectedTank.diameter">
+            </mat-form-field>
+        </div>
+        <div class="form-group col-sm-2">
+            <mat-form-field class="form-container">
+                <input matInput placeholder="Hacim Giriniz" id="volume" type="number" disabled ="disable"  [value]="getVolume()">
+            </mat-form-field>
+        </div>
+      </div>
+
+      <!--/.row-->
+      <div class="row">
+          <div class="form-container col-sm-3">
+            <button type="submit" class="btn btn-block btn-success" id="tank_save"
+                    *ngIf="selectedTank.id != -1"
+                    (click)="createTank()"><strong>Kaydet</strong></button>
+          </div>
+        <div class="form-container col-sm-3">
+        <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedCompany.id != -1"
+                onClick="window.location.reload()"><strong>Yenile</strong></button>
+      </div>
+        </div>
+    </div>
+  </div>
+</div>

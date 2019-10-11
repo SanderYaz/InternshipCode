@@ -1,0 +1,151 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <!-- kuluçkahane ve adaptasyonlar bittiğinde verilerin otomatik gelmesi planlanmaktadır. -->
+      <strong>Hasat Girişi Kayıt Sayfası</strong>
+    </div>
+
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <mat-form-field class="form-container">
+            <input matInput type="date" placeholder="Hasat Giriş Tarihi Seçiniz"  [(ngModel)]="selectedHarvest.hasat_date">
+          </mat-form-field>
+        </div>
+        <div class="form-group col-md-6">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Hasat Saati" type="time" id="if" [(ngModel)]="selectedHarvest.harvest_hour">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="İrsaliye Numarası Giriniz" type="text" id="irsaliye"
+                 [(ngModel)]="selectedHarvest.irsaliye">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Hasat Teknesi İsmini Giriniz" type="text" id="shipname"
+                 [(ngModel)]="selectedHarvest.shipname">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Account Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvest.account">
+            <mat-option *ngFor="let account of accounts" value="{{account.id}}">{{account.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Şirket Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvest.company">
+            <mat-option *ngFor="let company of companies" value="{{company.id}}">{{company.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Tesis Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvest.facility">
+          <div *ngFor="let facility of facilities">
+            <mat-option *ngIf="(selectedHarvest.company == facility.company)" value="{{facility.id}}">{{facility.name}} </mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Barch Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvest.unit">
+            <div *ngFor="let unit of units"><mat-option *ngIf="(selectedHarvest.facility == unit.facility)" value="{{unit.id}}">{{unit.name}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Kafes Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvest.tank">
+            <div *ngFor="let tank of tanks"><mat-option *ngIf="(selectedHarvest.unit == tank.unit)" value="{{tank.id}}">{{tank.name}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Fish Operation</mat-label>
+          <mat-select [(ngModel)]="selectedHarvest.fishoperation" multiple>
+            <div *ngFor="let fishoperation of fishoperations"><mat-option *ngIf="(selectedHarvest.tank == fishoperation.tank)" value="{{fishoperation.id}}">{{fishoperation.id}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Proje Adı Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvest.project"><ng-container *ngFor="let fishoperation of fishoperations" >
+            <div *ngFor="let project of projects"><ng-container *ngIf="(selectedHarvest.fishoperation == fishoperation.id)"><mat-option *ngIf="fishoperation.project == project.id " value="{{project.id}}">{{project.name}}</mat-option></ng-container></div></ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+
+      <div class="form-group">
+        <label for="harvest_quantitity"><strong>Hasat Miktarları (Tahmini)</strong></label>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th colspan="1" align="center">Hasat Miktarı (Liver)</th>
+              <th colspan="1" align="center">Ortalama Ağırlık(Kg)</th>
+              <th colspan="1" align="center">Toplam Ağırlık(Kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Liver Miktarı" type="text" id="weight"
+                         [(ngModel)]="selectedHarvest.weight">
+                </mat-form-field>
+              </td>
+
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Ortalama Ağırlık(Kg)" type="number" id="tahminiagirlik" disabled="disable" [value]="330.00">
+                </mat-form-field>
+              </td>
+
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Toplam Ağırlık(Kg)" id="harvest" type="number" disabled ="disable"  [value]="Hasatadet()">
+                </mat-form-field>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedHarvest.id != -1"
+                  (click)="createHarvest()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-warning" *ngIf="selectedHarvest.id != -1"
+                  (click)="updateHarvest()"><strong>Güncelle</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedHarvest.id != -1"
+                  (click)="deleteHarvest()"><strong>Sil</strong></button>
+        </div>
+      </div>
+    </div>

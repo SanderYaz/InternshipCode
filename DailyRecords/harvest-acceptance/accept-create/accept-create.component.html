@@ -1,0 +1,121 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Hasat Sonucu Kayıt Sayfası</strong>
+    </div>
+
+    <div class="card-body">
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Hasat Tarihi Seçiniz</mat-label>
+          <mat-select [(ngModel)]="date">
+            <mat-option *ngFor="let harvest of harvests"
+                        value="{{harvest.hasat_date}}">{{harvest.hasat_date}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Hasat Saati Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvestacceptance.harvest">
+            <ng-container *ngFor="let harvest of harvests">
+              <mat-option *ngIf="(date == harvest.hasat_date)"
+                          value="{{harvest.id}}">{{harvest.harvest_hour}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Fish Operasyonu Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvestacceptance.fishoperation">
+            <ng-container *ngFor="let harvest of harvests">
+              <div *ngFor="let fishoperation of fishoperations">
+                <ng-container *ngIf="(selectedHarvestacceptance.harvest == harvest.id)">
+                  <mat-option *ngIf="harvest.fishoperation == fishoperation.id "
+                              value="{{fishoperation.id}}">{{fishoperation.id}}</mat-option>
+                </ng-container>
+              </div>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Balık Türü Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvestacceptance.fishtype">
+            <ng-container *ngFor="let fishoperation of fishoperations">
+              <div *ngFor="let fishtype of fishtypes">
+                <ng-container *ngIf="(selectedHarvestacceptance.fishoperation == fishoperation.id)">
+                  <mat-option *ngIf="(fishoperation.fish_type == fishtype.id) "
+                              [value]="fishtype.id">{{fishtype.name}}</mat-option>
+                </ng-container>
+              </div>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Kalibre Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedHarvestacceptance.calibre" multiple>
+            <mat-option *ngFor="let calibre of calibries" [value]="calibre.id"> {{calibre.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Müşteri Barkod Numarası Giriniz" type="text" id="costumerbarcode"
+                 [(ngModel)]="selectedHarvestacceptance.costumerbarcode">
+        </mat-form-field>
+      </div>
+
+      <div class="card-body">
+        <table class="table table-bordered table-striped table-sm">
+          <thead>
+          <tr>
+            <th style="text-align: -webkit-center"> Hasat Kalibresi</th>
+            <th style="text-align: -webkit-center"> Ağırlık (KG)</th>
+            <th style="text-align: -webkit-center">Hasat Adedi</th>
+            <th style="text-align: -webkit-center">Ortalama Ağırlık</th>
+          </tr>
+          <tr *ngFor="let calibre of calibries; let i = index">
+
+            <ng-container style="text-align: -webkit-center" *ngIf="!(selectedHarvestacceptance.calibre[i] == null)"
+                          multiple>
+              <ng-container *ngFor="let calib of calibries">
+                <th align="center" *ngIf="(calib.id == selectedHarvestacceptance.calibre[i])"> {{calib.name}} </th>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!((!(selectedHarvestacceptance.calibre[i] == null)) == false)">
+
+              <td><input matInput placeholder="Ağırlık Giriniz (Kg)" type="number" id="agirlik"
+                         [(ngModel)]="agirlikSay[i]"></td>
+              <td><input matInput placeholder="Adet Giriniz" type="number" id="ortalama" [(ngModel)]="ortalamaSay[i]">
+              </td>
+              <td><input matInput matInputid="getcount" type="number" disabled="disable" [value]="getCount(i)"></td>
+            </ng-container>
+          </tr>
+          <!--<ng-container *ngFor="let calibre of calibries, let i = index"  align="center"><tr *ngIf="(selectedHarvestacceptance[i].calibre == calibre.id)" align="center"><strong>{{calibre.name}}</strong>
+            <td><input placeholder="Ortalama Ağırlık Giriniz (Gram)" type="number" id="agirlik" [(ngModel)]="agirlikSay[i]"></td>
+            <td><input placeholder="Sayısını Giriniz" type="number" id="ortalama"[(ngModel)]="ortalamaSay[i]"></td>
+            <td><input placeholder="Hacim Giriniz" id="getcount" type="number" disabled ="disable"  [value]="getCount(i)"></td></tr></ng-container>-->
+          </thead>
+        </table>
+        <div class="row">
+          <td class="col-md-6">
+            <button type="submit" class="btn btn-block btn-success" *ngIf="selectedHarvestacceptance.id != -1"
+                    (click)="createHarvestacceptance()"><strong>Kaydet</strong></button>
+          </td>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

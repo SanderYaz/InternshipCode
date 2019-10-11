@@ -1,0 +1,163 @@
+<form novalidate [formGroup]="FormGroup">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <strong>Tesis İçi Transfer & Aktarma Kayıt Sayfası</strong>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="date">Tarih</label>
+          <input type="date" class="form-control" id="aktarma_date" placeholder="">
+        </div>
+        <div class="form-group">
+          <label for="facility_name">Tesis İsmi</label>
+          <input list="facility_names" id="facility_name" placeholder="Tesis İsmi Seçiniz" class="form-control" />
+          <datalist id="facility_names">
+            <option value="" selected></option>
+            <option value="Adabaşı"></option>
+            <option value="Alagün"></option>
+            <option value="Başak"></option>
+            <option value="Birlik"></option>
+            <option value="Çakıl"></option>
+            <option value="Erşen"></option>
+            <option value="Gençler"></option>
+            <option value="Güneyege"></option>
+            <option value="İkizada"></option>
+            <option value="Işık"></option>
+            <option value="Kooperatif"></option>
+            <option value="Kuyucak"></option>
+            <option value="Mavisular"></option>
+            <option value="Offshore"></option>
+            <option value="Offshore2"></option>
+            <option value="Orfos"></option>
+            <option value="Salih Adası"></option>
+            <option value="Şengenç"></option>
+            <option value="Tarsu"></option>
+            <option value="Tekeburnu"></option>
+            <option value="Toprak Ada"></option>
+            <option value="Kıbrıs"></option>
+            <option value="Mersin"></option>
+          </datalist>
+        </div>
+
+        <div class="form-group">
+          <label for="barch_name">Barch İsmi</label>
+          <input type="text" class="form-control" id="barch_name"
+            placeholder="Barch İsmi Kafes İsmi Girildikten Sonra Otomatik Gelecek" disabled>
+        </div>
+        
+        <div class="form-group row">
+          <div formGroupName="itemRows">
+            <ng-container *ngIf='FormGroup.controls.itemRows!=null'>
+              <div *ngFor="let itemrow of FormGroup.controls.itemRows.controls; let i=index" [formGroupName]="i">
+
+                <div class="form-group">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Kafes No</th>
+                        <th>Balığın Cinsi</th>
+                        <th>Aktarılacak Miktar</th>
+                        <th>Aktarılacak Kafes</th>
+                        <th>Aktarılacak Kafesin Kalan Kapasitesi</th>
+                        <th>Sil</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="form-group">
+                            <input list="lattice_names" id="lattice_name" class="form-control" />
+                            <datalist id="lattice_names">
+                              <option value="" selected></option>
+                              <option value="A1"></option>
+                              <option value="A2"></option>
+                              <option value="A3"></option>
+                              <option value="A4"></option>
+                              <option value="A5"></option>
+                              <option value="A6"></option>
+                              <option value="A7"></option>
+                              <option value="A8"></option>
+                              <option value="A9"></option>
+                              <option value="A10"></option>
+                            </datalist>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <input type="text" class="form-control" id="fishoperation_id" placeholder="Balığın ismi otomatik gelecek fishoperation id'ye göre" disabled="disable">
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <input type="number" class="form-control" id="aktarilacak_miktar">
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <input list="lattice_names" id="lattice_name2" class="form-control" />
+                            <datalist id="lattice_names">
+                              <option value="" selected></option>
+                              <option value="A1"></option>
+                              <option value="A2"></option>
+                              <option value="A3"></option>
+                              <option value="A4"></option>
+                              <option value="A5"></option>
+                              <option value="A6"></option>
+                              <option value="A7"></option>
+                              <option value="A8"></option>
+                              <option value="A9"></option>
+                              <option value="A10"></option>
+                            </datalist>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <input list="fish_types" id="fish_type" placeholder="Fishoperation'da balık cinsi seçilecek" class="form-control" />   
+                            <datalist id="fish_types">
+                                <option value="Alabalık"></option>
+                                <option value="Çipura"></option>
+                                <option value="Levrek"></option>
+                                <option value="Granyoz"></option>
+                                <option value="Sarıkuyruk"></option>
+                                <option value="Kefal"></option>
+                                <option value="Minekop"></option>
+                                <option value="Lahoz"></option>
+                            </datalist>
+                          </div>
+                        </td>
+                        <td>
+                          <button (click)="deleteRow(i)" class="btn btn-danger">
+                            X
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+
+                
+              </div>
+            </ng-container>
+            <div class="form-group" style="text-align:right">
+              <button type="button" (click)="addNewRow()" [disabled]="FormGroup.invalid" class="btn btn-primary">Add New
+                Item</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+          <div class="form-group col-sm-4">
+            <button type="submit" class="btn btn-block btn-success">Create</button>
+          </div>
+          <div class="form-group col-sm-4">
+            <button type="submit" class="btn btn-block btn-warning">Update</button>
+          </div>
+          <div class="form-group col-sm-4">
+            <button type="reset" class="btn btn-block btn-danger">Delete</button>
+          </div>
+        </div>
+    </div>
+  </div>
+</form>

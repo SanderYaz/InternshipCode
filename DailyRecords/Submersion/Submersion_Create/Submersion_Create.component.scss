@@ -1,0 +1,13 @@
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-container > * {
+  width: 100%;
+}
+span:empty,td:empty,th:empty {
+  display: none;
+}

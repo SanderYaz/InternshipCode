@@ -1,0 +1,521 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="row">
+  <div class="col-lg-12">
+
+    <div class="card" id="Update" *ngIf="!hide">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> <strong>Gelen Balık Güncelleme Tablosu</strong>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput [matDatepicker]="picker" placeholder="Balık Giriş Tarihi Seçiniz" [(ngModel)]="selectedFishentry.date" >
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Account Seçiniz</mat-label>
+            <mat-select [(ngModel)] ="selectedFishentry.account">
+              <mat-option *ngFor="let account of accounts" [value]="account.id">{{account.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Kafes Kodu Giriniz" type="text" id="kafeskodu"
+                   [(ngModel)]="selectedFishentry.kafeskodu">
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="İrsaliye Numarası Giriniz" type="text" id="irsaliyeno"
+                   [(ngModel)]="selectedFishentry.irsaliyeno">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <mat-label>Geldiği Şirketi Seçiniz</mat-label>
+              <mat-select [(ngModel)]="selectedFishentry.geldigisirket">
+                <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <mat-label>Gideceği Şirketi Seçiniz</mat-label>
+              <mat-select [(ngModel)]="selectedFishentry.gidecegisirket">
+                <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <mat-label>Geldiği Tesisi Seçiniz</mat-label>
+              <mat-select [(ngModel)]="selectedFishentry.geldigitesis">
+                <div *ngFor="let facility of facilities"><mat-option *ngIf="(selectedFishentry.geldigisirket == facility.company)" [value]="facility.id">{{facility.name}}</mat-option></div>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <mat-label>Gideceği Tesisi Seçiniz</mat-label>
+              <mat-select [(ngModel)]="selectedFishentry.gidecegitesis">
+                <div *ngFor="let facility of facilities"><mat-option *ngIf="(selectedFishentry.gidecegisirket == facility.company)" [value]="facility.id">{{facility.name}}</mat-option></div>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <mat-label>Geldiği Birimi Seçiniz</mat-label>
+              <mat-select [(ngModel)]="selectedFishentry.geldigiunit">
+                <div *ngFor="let unit of units"><mat-option *ngIf="(selectedFishentry.geldigitesis == unit.facility)" [value]="unit.id">{{unit.name}}</mat-option></div>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <mat-label>Gideceği Barch'ı Seçiniz</mat-label>
+              <mat-select [(ngModel)]="selectedFishentry.gidecegiunit">
+                <div *ngFor="let unit of units"><mat-option *ngIf="(selectedFishentry.gidecegitesis == unit.facility)" [value]="unit.id">{{unit.name}}</mat-option></div>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <mat-label>Geldiği Kafes'i Seçiniz</mat-label>
+              <mat-select [(ngModel)]="selectedFishentry.geldigitank">
+                <div *ngFor="let tank of tanks"><mat-option *ngIf="(selectedFishentry.geldigiunit == tank.unit)" [value]="tank.id">{{tank.name}}</mat-option></div>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <mat-label>Gideceği Kafes'i Seçiniz</mat-label>
+              <mat-select [(ngModel)]="selectedFishentry.gidecegitank">
+                <div *ngFor="let tank of tanks"><mat-option *ngIf="(selectedFishentry.gidecegiunit == tank.unit)" [value]="tank.id">{{tank.name}}</mat-option></div>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Proje Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedFishentry.project">
+              <mat-option *ngFor="let project of projects" value="{{project.id}}">{{project.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Gelen Balık Cinsini Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedFishentry.fishtype">
+              <mat-option *ngFor="let fishtype of fishtypes" [value]="fishtype.id">{{fishtype.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Batch Kodu Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedFishentry.batch">
+              <mat-option *ngFor="let batch of batches" [value]="batch.id">{{batch.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Origin İsmi Seçiniz</mat-label>
+            <mat-select [(value)]="selectedFishentry.origins">
+              <mat-option *ngFor="let origin of origins"  [value]="origin.id" >{{origin.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Boylama Kodu Giriniz (Ör: BKBB)" type="text" id="boylamakod"
+                   [(ngModel)]="selectedFishentry.boylamakodu">
+          </mat-form-field>
+        </div>
+        <!-- Kalite kodu durumu kuluçkahane ve kafes ile konuşulacak. Konuşulacak konu: Sistemin bu konu otomatik ataması -->
+        <div class ="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Balık Gradı Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedFishentry.grad">
+              <mat-option value="A">A Grad</mat-option>
+              <mat-option value="B">B Grad</mat-option>
+              <mat-option value="C">C Grad</mat-option>
+              <mat-option value="D">D Grad</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Net Adet Giriniz" type="number" id="netadet"
+                   [(ngModel)]="selectedFishentry.net">
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Ortalama Ağırlık Giriniz(gram)" type="number" id="agirlik"
+                   [(ngModel)]="selectedFishentry.agirlik">
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Extra Adet Giriniz" type="number" id="extra"
+                   [(ngModel)]="selectedFishentry.extra">
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Deforme Adet Giriniz" type="number" id="deformeadet"
+                   [(ngModel)]="selectedFishentry.deform">
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Telafi Adet Giriniz" type="number" id="telafi"
+                   [(ngModel)]="selectedFishentry.telafi">
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Net Biomas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Hesaplanan Biomas (gram)" id="Biomas" type="number"   [(ngModel)]="selectedFishentry.biomasnet">
+                </mat-form-field>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Gelen Balık Brüt Tablosu</strong></label>
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Brüt</th>
+              <th>Biomas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Brüt Adet Giriniz" type="number" id="brutadet"
+                         [(ngModel)]="selectedFishentry.brut">
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Hesaplanan Brüt Biomas" id="Biomas2" type="number"  [(ngModel)]="selectedFishentry.biomasbrut">
+                </mat-form-field>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="form-group">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Tüketilen Toplam Yem Miktarı</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <mat-form-field class="form-container"><strong>
+                  <input matInput placeholder="Tüketilen Toplam Yem Miktarını Giriniz (kg)" type="text" id="tuketilenyem"
+                         [(ngModel)]="selectedFishentry.totalfeed" >
+                </strong>
+                </mat-form-field>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="form-group">
+          <label ><strong>FCR</strong></label>
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Net FCR</th>
+              <th>Brüt FCR</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder=" Net FCR " type="number" id="netfc"   [(ngModel)]="selectedFishentry.netfcr">
+                </mat-form-field>
+              </td>
+
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Brüt FCR" id="brutfcr" type="number"  [(ngModel)]="selectedFishentry.brutfcr">
+                </mat-form-field>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="row">
+          <div class="form-group  col-sm-6">
+            <button type="button" class="btn btn-block btn-warning" id="tank_update"
+                    *ngIf="selectedTank.id != -1"
+                    (click)="updateFishentry(selectedFishentry)"><strong>Güncelle</strong></button>
+          </div>
+          <div class="form-group  col-sm-6">
+            <button type="button" class="btn btn-block btn-danger" id="gizle"
+                    *ngIf="selectedFishentry.id != -1"
+                    (click)="hide =!hide"><strong>Kapat</strong></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> Gelen Balık Rapor Sayfası
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-2" align="right" >
+            <a href="/IncomingFish_Create" class="btn btn-block btn-success">Gelen Balık Ekle</a>
+          </div>
+        <mat-form-field class="form-group col-md-8">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+        <div class="form-group col-md-2">
+          <button type="button" class="btn btn-block btn-danger" id="yenile"
+                  *ngIf="selectedFishentry.id != -1"
+                  (click)="refreshtable()"><strong>Tabloyu Yenile</strong></button>
+        </div>
+      </div>
+        <div class='table-responsive mat-elevation-z8'>
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+
+<!--
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Gelen Balık ID  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.id}} </td>
+            </ng-container>
+-->
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Balık Giriş Tarihi  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.date}} </td>
+            </ng-container>
+            <ng-container matColumnDef="kafeskodu">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Kafes Kodu  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.kafeskodu}} </td>
+            </ng-container>
+            <ng-container matColumnDef="irsaliyeno">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  İrsaliye Numarası  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.irsaliyeno}} </td>
+            </ng-container>
+            <ng-container matColumnDef="project">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Proje İsmi </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.project}} <span *ngFor="let project of projects">
+                <tr *ngIf="(fishentry.project == project.id)">{{project.name}}</tr>
+              </span> </td>
+            </ng-container>
+
+            <!--
+            <ng-container matColumnDef="account">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Hesap İsmi  </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let account of accounts">
+                <tr *ngIf="(fishentry.account == account.id)">{{account.name}}</tr>
+              </span> </td>
+            </ng-container>
+            -->
+            <ng-container matColumnDef="geldigisirket">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Geldiği Şirket </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let company of companies">
+                <tr *ngIf="(fishentry.geldigisirket == company.id)">{{company.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="geldigitesis">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Geldiği Tesis </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let facility of facilities">
+                <tr *ngIf="(fishentry.geldigitesis == facility.id)">{{facility.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="geldigiunit">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Geldiği Unit  </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let unit of units">
+                <tr *ngIf="(fishentry.geldigiunit == unit.id)">{{unit.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="geldigitank">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Geldiği Tank  </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let tank of tanks">
+                <tr *ngIf="(fishentry.geldigitank == tank.id)">{{tank.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="gidecegisirket">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Gideceği Şirket </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let company of companies">
+                <tr *ngIf="(fishentry.gidecegisirket == company.id)">{{company.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="gidecegitesis">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Gideceği Tesis </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let facility of facilities">
+                <tr *ngIf="(fishentry.gidecegitesis == facility.id)">{{facility.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="gidecegiunit">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Gideceği Barch  </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let unit of units">
+                <tr *ngIf="(fishentry.gidecegiunit == unit.id)">{{unit.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="gidecegitank">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Gideceği Kafes  </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let tank of tanks">
+                <tr *ngIf="(fishentry.gidecegitank == tank.id)">{{tank.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="fishtype">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Gelen Balık Cinsi  </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let fishtype of fishtypes">
+                <tr *ngIf="(fishentry.fishtype == fishtype.id)">{{fishtype.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="batch">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Batch İsmi </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let batch of batches">
+                <tr *ngIf="(fishentry.batch == batch.id)">{{batch.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="origins">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Origin İsmi  </th>
+              <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let origin of origins">
+                <tr *ngIf="(fishentry.origins == origin.id)">{{origin.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="boylamakodu">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Boylama Kodu  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.boylamakodu}} </td>
+            </ng-container>
+            <ng-container matColumnDef="grad">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Balık Gradı  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.grad}} </td>
+            </ng-container>
+            <ng-container matColumnDef="agirlik">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Ortalama Ağırlık  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.agirlik}} </td>
+            </ng-container>
+            <ng-container matColumnDef="net">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Net  </th>
+              <td mat-cell *matCellDef="let fishentry"> <strong>{{fishentry.net}}</strong>  </td>
+            </ng-container>
+            <ng-container matColumnDef="extra">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Extra Adeti  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.extra}} </td>
+            </ng-container>
+            <ng-container matColumnDef="deform">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Deforme Adeti  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.deform}} </td>
+            </ng-container>
+            <ng-container matColumnDef="telafi">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Telafi Adet  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.telafi}} </td>
+            </ng-container>
+            <ng-container matColumnDef="brut">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Brüt  </th>
+              <td mat-cell *matCellDef="let fishentry"><strong> {{fishentry.brut}} </strong>  </td>
+            </ng-container>
+            <ng-container matColumnDef="biomasnet">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Net Biomass  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.biomasnet}} </td>
+            </ng-container>
+            <ng-container matColumnDef="biomasbrut">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Brut Biomass  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.biomasbrut}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalfeed">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Toplam Yem  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.totalfeed}} </td>
+            </ng-container>
+            <ng-container matColumnDef="brutfcr">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Brut Fcr  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.brutfcr}} </td>
+            </ng-container>
+            <ng-container matColumnDef="netfcr">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Net Fcr  </th>
+              <td mat-cell *matCellDef="let fishentry"> {{fishentry.netfcr}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="detail">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Detaylar  </th>
+              <td mat-cell *matCellDef="let fishentry"><button type="submit" class="btn btn-block btn-ghost-success" *ngIf="selectedFishentry.id != -1" (click)="Detail()"><strong> Detaylar</strong></button></td>
+            </ng-container>
+            <ng-container matColumnDef="send">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: -webkit-center">  Operasyon </th>
+              <td mat-cell *matCellDef="let fishentry"><div *ngIf="selectedFishentry.id != -1"><button type="submit" class="btn btn-block btn-ghost-info" *ngIf="selectedFishentry.id != -1" (click)="getSend(fishentry)"><strong>Operasyonu Gönder</strong></button></div></td>
+            </ng-container>
+            <ng-container matColumnDef="update">
+              <th mat-header-cell *matHeaderCellDef>  Güncelle  </th>
+              <td mat-cell *matCellDef="let fishentry"><button type="submit" class="btn btn-block btn-ghost-warning" *ngIf="selectedFishentry.id != -1" (click)="updateFunc(fishentry)"><strong>Güncelle</strong></button></td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef>  Sil  </th>
+              <td mat-cell *matCellDef="let fishentry; let element"><button type="reset" class="btn btn-block btn-ghost-danger" *ngIf="selectedFishentry.id != -1" (click)="deleteFishentry(fishentry.id, element)"><strong>Sil</strong></button></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="display"></tr>
+            <tr mat-row *matRowDef="let row; columns: display;"></tr>
+
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

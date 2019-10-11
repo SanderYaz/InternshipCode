@@ -1,0 +1,109 @@
+<div class="row">
+    <div class="col-lg-12">
+      <div class="card" id="Update" *ngIf="!hide">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> <strong>Birim Güncelleme Tablosu</strong>
+        </div>
+        <div class="card-body">
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Tesis İsmi Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedUnit.facility">
+              <mat-option *ngFor="let facility of facilities" [value]="facility.id">{{facility.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Birim İsmi Giriniz" type="text" maxlength="60" [(ngModel)]="selectedUnit.name"
+                   id="unitname">
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Açıklamayı Giriniz" type="text" [(ngModel)]="selectedUnit.description"
+                   id="description">
+          </mat-form-field>
+        </div>
+        <div class="row">
+        <div class="form-group col-md-6">
+          <button type="button" class="btn btn-block btn-warning" id="tank_update"
+                  *ngIf="selectedUnit.id != -1"
+                  (click)="updateUnit(selectedUnit)"><strong>Güncelle</strong></button>
+        </div>
+        <div class="form-group col-md-6">
+          <button type="button" class="btn btn-block btn-danger" id="gizle"
+                  *ngIf="selectedUnit.id != -1"
+                  (click)="hide =!hide"><strong>Kapat</strong></button>
+        </div>
+        </div>
+        </div>
+      </div>
+
+
+
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> Birim Table
+        </div>
+        <br>
+        <div class="col-sm-2" align="right" >
+          <a href="/UnitCreate" target="_blank" class="btn btn-block btn-success">Birim Ekle</a>
+        </div>
+        <br>
+
+        <div class="card-body">
+          <div class="row">
+            <mat-form-field class="form-group col-md-10">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+            </mat-form-field>
+            <div class="form-group col-md-2">
+              <button type="button" class="btn btn-block btn-danger" id="yenile"
+                      *ngIf="selectedUnit.id != -1"
+                      (click)="refreshtable()"><strong>Tabloyu Yenile</strong></button>
+            </div>
+          </div>
+          <div class='table-responsive mat-elevation-z8'>
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Unit Id </th>
+              <td mat-cell *matCellDef="let units"> {{units.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Birim İsmi </th>
+              <td mat-cell *matCellDef="let units"> {{units.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Açıklama </th>
+              <td mat-cell *matCellDef="let units"> {{units.description}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="facility">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Tesis ismi </th>
+              <td mat-cell *matCellDef="let unit"> <span *ngFor="let facility of facilities">
+                <tr *ngIf="(unit.facility == facility.id)"> {{facility.name}}</tr></span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="update">
+              <th mat-header-cell *matHeaderCellDef> Güncelle </th>
+              <td mat-cell *matCellDef="let units"><button type="submit" class="btn btn-block btn-ghost-warning" *ngIf="selectedFacility.id != -1" (click)="updateFunc(units)"><strong>Güncelle</strong></button></td>
+            </ng-container>
+
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Sil </th>
+              <td mat-cell *matCellDef="let units; let element"><button type="reset" class="btn btn-block btn-ghost-danger" *ngIf="selectedFacility.id != -1" (click)="deleteUnit(units.id, element)"><strong>Sil</strong></button></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>

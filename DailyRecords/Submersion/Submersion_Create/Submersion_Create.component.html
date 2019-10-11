@@ -1,0 +1,125 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Boylama Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput type="date" [(ngModel)]="selectedGradingrecord.date" placeholder="Boylama Giriş Tarihi Seçiniz"  >
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Şirket Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedGradingrecord.company">
+            <mat-option *ngFor="let company of companies" value="{{company.id}}">{{company.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Tesis Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedGradingrecord.facility">
+            <div *ngFor="let facility of facilities"><mat-option *ngIf="(selectedGradingrecord.company == facility.company)" value="{{facility.id}}">{{facility.name}} </mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Barch Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedGradingrecord.unit">
+            <div *ngFor="let unit of units"> <mat-option *ngIf="(selectedGradingrecord.facility == unit.facility)"  value="{{unit.id}}">{{unit.name}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Kafes Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedGradingrecord.tank">
+            <div *ngFor="let tank of tanks"> <mat-option *ngIf="(selectedGradingrecord.unit == tank.unit)"  value="{{tank.id}}">{{tank.name}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Balık Türü Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedGradingrecord.fish">
+            <div *ngFor="let fishtype of fishtypes"> <mat-option value="{{fishtype.id}}">{{fishtype.name}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <tr>
+        <th align="center" > Kafes Balık türü </th>
+        <th align="center" > Kafes Balık Sayısı </th>
+        <th align="center" > Kafes Balık Adedi </th>
+        <th align="center" > Toplam Yem Sayısı </th>
+      </tr>
+      <ng-container *ngFor="let fishoperation of fishoperations, let s = index"><ng-container align="center" *ngIf="(selectedGradingrecord.tank == fishoperation.tank)"><tr align="center">
+        <td *ngFor="let fish of fishtypes"><ng-container *ngIf="fishoperation.fish_type == fish.id"><input matInput class="form-container" disabled placeholder="Kafes Balık türü" [value]="fish.name"></ng-container></td>
+        <td>
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Kafes Balık Sayısı" type="number" disabled="disable"
+                   [value]="fishoperation.net_quantity">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Kafes Balık Adedi" type="number" disabled="disable"
+                   [value]="fishoperation.gross_quantity">
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Toplam Yem Sayısı" type="number" disabled="disable"
+                   [value]="fishoperation.totalfeed">
+          </mat-form-field>
+        </td>
+      </tr></ng-container></ng-container>
+
+
+
+      <div class="card-body">
+        <table class="table table-bordered table-striped table-sm">
+          <thead>
+          <tr>
+            <th align="center" > Kafes </th> <!-- Kafesler üniteye bağlı şekilde gelecek -->
+            <th align="center" > Kafes Kodu </th>
+            <th align="center" > Boylama Kategorisi </th>
+            <th align="center" > Boylama Adedi </th>
+            <th align="center" > Ortalama Ağırlık </th>
+            <th align="center" > Biomass </th>
+            <!-- Biomass hesaplama sonucu gelecek. formül: Ortalama Ağırlık * Boylama Adedi -->
+            <th align="center" > Yem Miktarı </th>
+            <!-- Yem Miktarı otomatik gelecek. (toplam yem (yani: yukarıda kafese ait gelen toplam yem miktarı) / Biomass Toplamı) * Biomass  -->
+          </tr>
+          <ng-container *ngFor="let fishoperation of fishoperations, let s = index"><ng-container *ngIf="selectedGradingrecord.tank == fishoperation.tank"><span [hidden]='TarOP(fishoperation.id)'></span></ng-container><ng-container *ngFor="let tank of tanks, let i = index"  align="center"><ng-container align="center" *ngIf="(fishoperation.tank == tank.id)"><ng-container align="center" *ngIf="(fishoperation.fish_type == selectedGradingrecord.fish)"><tr *ngIf="(selectedGradingrecord.unit == tank.unit)" id="veriable" align="center"><strong>{{tank.name}}</strong>
+            <ng-container align="center" *ngIf="(fishoperation.tank == tank.id)"><th align="center" *ngIf="(fishoperation.fish_type == selectedGradingrecord.fish)" > {{fishoperation.kafeskodu}} </th>
+             <span [hidden]='funcAdd(fishoperation.totalfeed, s, fishoperation.id, fishoperation.netbiomas, targetfOP)'></span></ng-container>
+            <th><mat-form-field class="form-container">
+              <mat-select [(ngModel)]="bkatSay[s]">
+                <mat-option value="Büyük"> Büyük </mat-option>
+                <mat-option value="Orta"> Orta </mat-option>
+                <mat-option value="Küçük"> Küçük </mat-option>
+              </mat-select></mat-form-field></th>
+              <th><input matinput type="number" class="form-control"  placeholder="Boylama Adedi" [(ngModel)]="BAdetSay[s]" ></th>
+              <th><input matinput type="number" class="form-control"  placeholder="Ortalama Ağırlık" [(ngModel)]="OrtSay[s]" ></th>
+              <th><input matinput disabled type="number" class="form-control"  placeholder="Biomass" [value]="Bio(s)" ></th>
+              <th><input matinput disabled type="number" class="form-control"  placeholder="Yem Miktarı" [value]="Yem(s)" ></th>
+            </tr></ng-container></ng-container></ng-container></ng-container>
+          </thead>
+        </table>
+      </div>
+    </div>
+
+
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedGradingrecord.id != -1"
+                  (click)="tuketim()"><strong>Kaydet</strong></button>
+        </div>
+      </div>
+    </div>
+  </div>

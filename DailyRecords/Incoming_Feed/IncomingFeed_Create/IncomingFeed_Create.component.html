@@ -1,0 +1,126 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Yem Tüketimi Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput type="date" [(ngModel)]="selectedStocklevels.date"
+                 placeholder="Yem Tüketim Giriş Tarihi Seçiniz">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Şirket Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevels.company">
+            <mat-option *ngFor="let company of companies" value="{{company.id}}">{{company.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Tesis Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevels.facility">
+            <div *ngFor="let facility of facilities">
+              <mat-option *ngIf="(selectedStocklevels.company == facility.company)"
+                          value="{{facility.id}}">{{facility.name}} </mat-option>
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Barch Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevels.unit">
+            <div *ngFor="let unit of units">
+              <mat-option *ngIf="(selectedStocklevels.facility == unit.facility)"
+                          value="{{unit.id}}">{{unit.name}}</mat-option>
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Balık Türü Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevels.fish">
+            <div *ngFor="let fishtype of fishtypes">
+              <mat-option value="{{fishtype.id}}">{{fishtype.name}}</mat-option>
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+      <div class="card-body">
+        <table class="table table-bordered table-striped table-sm">
+          <thead>
+          <tr>
+            <th align="center"> Kafes ismi</th>
+            <th align="center"> Kafes Kodu</th>
+            <ng-container *ngFor="let stocklevel of stocklevels">
+              <ng-container align="center" *ngIf="(selectedStocklevels.unit == stocklevel.unit)">
+                <th *ngFor="let stock of stocks">
+                  <ng-container align="center" *ngIf="(stock.category == 1)">
+                    <ng-container *ngIf="stock.id == stocklevel.stock">{{stock.name}}</ng-container>
+                  </ng-container>
+                </th>
+              </ng-container>
+            </ng-container>
+            <!-- <th align="center" > Aç Bırakıldı</th> -->
+          </tr>
+
+          <ng-container *ngFor="let fishoperation of fishoperations, let s = index">
+            <ng-container *ngFor="let tank of tanks, let i = index" align="center">
+              <ng-container align="center" *ngIf="(fishoperation.tank == tank.id)">
+                <ng-container align="center" *ngIf="(fishoperation.fish_type == selectedStocklevels.fish)">
+                  <tr *ngIf="(selectedStocklevels.unit == tank.unit)" id="veriable" align="center">
+                    <strong>{{tank.name}}</strong>
+                    <ng-container align="center" *ngIf="(fishoperation.tank == tank.id)">
+                      <th align="center"
+                          *ngIf="(fishoperation.fish_type == selectedStocklevels.fish)"> {{fishoperation.kafeskodu}} </th>
+                    </ng-container>
+                    <ng-container *ngFor="let stocklevel of stocklevels, let j = index">
+                      <ng-container align="center" *ngIf="(selectedStocklevels.unit == stocklevel.unit)">
+                        <th *ngFor="let stock of stocks, let x = index">
+                          <ng-container align="center" *ngIf="(stock.category == 1)">
+                            <ng-container *ngIf="stock.id == stocklevel.stock">
+                              <div
+                                [hidden]='funcAdd(tank.id, stocklevel.id, stocklevel.stock, i+(j*100)+(s*100)+(x*100), fishoperation.id, fishoperation.batch)'>
+                                <input type="number" class="form-control" id="deneme2" style="font-weight: bold;"
+                                       [(ngModel)]="kutucukSay[i+(j*100)+(s*100)+(x*100)]"></div>
+                            </ng-container>
+                          </ng-container>
+                        </th>
+                      </ng-container>
+                    </ng-container>
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+          </thead>
+        </table>
+      </div>
+
+
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedStocklevels.id != -1"
+                  (click)="tuketim()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-warning" *ngIf="selectedStocklevels.id != -1"
+                  (click)="updateStocklevels()"><strong>Güncelle</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedStocklevels.id != -1"
+                  (click)="deleteStocklevels()"><strong>Sil</strong></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

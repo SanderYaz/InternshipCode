@@ -1,0 +1,222 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="row">
+    <div class="col-lg-12">
+      <!-- UPDATE -->
+      <div class="card" id="Update" *ngIf="!hide">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> <strong>Tank Güncelleme Tablosu</strong>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <mat-form-field class="form-container">
+              <mat-label>Şirket İsmi Seçiniz</mat-label>
+              <mat-select [(ngModel)]="selectedTank.company">
+                <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Birim İsmi Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedTank.unit">
+              <div *ngFor="let unit of units"><mat-option [value]="unit.id">{{unit.name}}</mat-option></div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Tank İsmi Giriniz" type="text" maxlength="60" [(ngModel)]="selectedTank.name"
+                   id="tankname">
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-select placeholder="Kafes Türünü Seçiniz" type="text"
+                        [(ngModel)]="selectedTank.type" id="tank_type">
+              <mat-option value="Tank">Tank</mat-option>
+              <mat-option value="Cage">Cage</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Tank | Kafes Şekli Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedTank.shape_id">
+              <mat-option *ngFor="let shape of shapes" [value]="shape.id">{{shape.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-select placeholder="Proje Mi?" type="text" [(ngModel)]="selectedTank.is_project">
+              <mat-option [value]= 'true'> Evet </mat-option>
+              <mat-option [value]= 'false'> Hayır </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group" *ngIf="!(selectedTank.is_project == 0)">
+          <mat-form-field class="form-container">
+            <mat-label>Proje Adı</mat-label>
+            <mat-select [(ngModel)]="selectedTank.project">
+              <mat-option *ngFor="let project of projects" [value]="project.id">{{project.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-sm-2">
+            <mat-form-field class="form-container">
+              <input matInput placeholder="Genişlik Giriniz" id="weight" type="number" [(ngModel)]="selectedTank.weight">
+            </mat-form-field>
+          </div>
+          <div class="form-group col-sm-2">
+            <mat-form-field class="form-container">
+              <input matInput placeholder="Uzunluk Giriniz" id="length" type="number" [(ngModel)]="selectedTank.length">
+            </mat-form-field>
+          </div>
+          <div class="form-group col-sm-2">
+            <mat-form-field class="form-container">
+              <input matInput placeholder="Derinlik(Yükseklik) Giriniz" id="height" type="number" [(ngModel)]="selectedTank.height">
+            </mat-form-field>
+          </div>
+          <div class="form-group col-sm-2">
+            <mat-form-field class="form-container">
+              <input matInput placeholder="Çap Giriniz" id="diameter" type="number" [(ngModel)]="selectedTank.diameter">
+            </mat-form-field>
+          </div>
+          <div class="form-group col-sm-2">
+            <mat-form-field class="form-container">
+              <input matInput placeholder="Hacim Giriniz" id="volume" type="number" disabled ="disable"  [value]="getVolume()">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group  col-sm-6">
+          <button type="button" class="btn btn-block btn-warning" id="tank_update"
+                  *ngIf="selectedTank.id != -1"
+                  (click)="updateTank(selectedTank)"><strong>Güncelle</strong></button>
+        </div>
+          <div class="form-group  col-sm-6">
+            <button type="button" class="btn btn-block btn-danger" id="gizle"
+                    *ngIf="selectedTank.id != -1"
+                    (click)="hide =!hide"><strong>Kapat</strong></button>
+          </div>
+        </div>
+        </div>
+        </div>
+
+      <!-- DATA -->
+      <div class="card">
+        <div class="card-header">
+        <i class="fa fa-align-justify"></i> Tank Table
+      </div>
+        <br>
+        <div class="col-sm-2" align="right" >
+          <a href="/TankCreate" target="_blank" class="btn btn-block btn-success">Tank | Kafes Ekle</a>
+        </div>
+        <br>
+
+        <div class="card-body">
+          <div class="row">
+            <mat-form-field class="form-group col-md-10">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+            </mat-form-field>
+            <div class="form-group col-md-2">
+              <button type="button" class="btn btn-block btn-danger" id="yenile"
+                      *ngIf="selectedProject.id != -1"
+                      (click)="refreshtable()"><strong>Tabloyu Yenile</strong></button>
+            </div>
+          </div>
+          <div class='table-responsive mat-elevation-z8'>
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Tank ID </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.id}} </td>
+            </ng-container>
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Kafes Türü </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.type}} </td>
+            </ng-container>
+            <ng-container matColumnDef="company">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Şirket İsmi </th>
+              <td mat-cell *matCellDef="let tank"> <span *ngFor="let company of companies">
+                <tr *ngIf="(tank.company == company.id)"> {{company.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <!-- ((facility çağırmak)) <ng-container matColumnDef="facility">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Tesis İsmi </th>
+              <td mat-cell *matCellDef="let tank"> <span *ngFor="let facility of facilities"> <span *ngFor="let unit of units"> <span *ngIf="(tank.unit == unit.id)">
+                <tr *ngIf="(unit.facility == facility.id)"> {{facility.name}}</tr>
+              </span> </span> </span> </td>
+            </ng-container> -->
+            <ng-container matColumnDef="unit">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Birim İsmi </th>
+              <td mat-cell *matCellDef="let tank"> <span *ngFor="let unit of units">
+                <tr *ngIf="(tank.unit == unit.id)"> {{unit.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Tank İsmi </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="shape_id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Tank | Kafes Şekli </th>
+              <td mat-cell *matCellDef="let tank"> <span *ngFor="let shape of shapes">
+                <tr *ngIf="(tank.shape_id == shape.id)">{{shape.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="weight">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Genişlik </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.weight}} </td>
+            </ng-container>
+            <ng-container matColumnDef="height">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Derinlik(Yükseklik) </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.height}} </td>
+            </ng-container>
+            <ng-container matColumnDef="length">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Uzunluk </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.length}} </td>
+            </ng-container>
+            <ng-container matColumnDef="diameter">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Çap </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.diameter}} </td>
+            </ng-container>
+            <ng-container matColumnDef="volume">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Hacim </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.volume}} </td>
+            </ng-container>
+            <ng-container matColumnDef="is_project">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Proje mi </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.is_project}} </td>
+            </ng-container>
+            <ng-container matColumnDef="project">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Proje adı </th>
+              <td mat-cell *matCellDef="let tanks"> {{tanks.project}} </td>
+            </ng-container>
+            <ng-container matColumnDef="update">
+              <th mat-header-cell *matHeaderCellDef> Güncelle </th>
+              <td mat-cell *matCellDef="let tanks"><button type="submit" class="btn btn-block btn-ghost-warning" *ngIf="selectedTank.id != -1" (click)="updateFunc(tanks)"><strong>Güncelle</strong></button></td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Sil </th>
+              <td mat-cell *matCellDef="let tanks; let element"><button type="reset" class="btn btn-block btn-ghost-danger" *ngIf="selectedTank.id != -1" (click)="deleteTank(tanks.id, element)"><strong>Sil</strong></button></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+

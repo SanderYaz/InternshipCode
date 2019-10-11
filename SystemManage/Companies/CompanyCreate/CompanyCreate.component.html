@@ -1,0 +1,67 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Şirket Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+      <hr>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Client İsmi Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedCompany.client">
+            <mat-option *ngFor="let client of clients" [value]="client.id">{{client.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Şirket İsmi Giriniz" type="text" maxlength="60"
+            [(ngModel)]="selectedCompany.name" id="companyname">
+        </mat-form-field>
+      </div>
+
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Sorumlu Kişi Ad/Soyad Bilgilerini Giriniz" type="text"
+            [(ngModel)]="selectedCompany.responsible_person" id="companyresponsible">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <textarea matInput maxlength="100" placeholder="Adres" [(ngModel)]="selectedCompany.address"
+            id="companyaddress"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput type="number" maxlength="11" placeholder="Telefon Numarası"
+            [(ngModel)]="selectedCompany.phone" id="company_phone">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Vergi Dairesi" type="text" maxlength="20"
+            [(ngModel)]="selectedCompany.tax_office" id="companytax">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Vergi Numarası | TC Numarası" maxlength="11" type="number"
+            [(ngModel)]="selectedCompany.tax_number" id="companytaxnumber">
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedCompany.id != -1"
+            (click)="createCompany()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedCompany.id != -1"
+                  onClick="window.location.reload()"><strong>Yenile</strong></button>
+        </div>
+      </div>
+    </div>

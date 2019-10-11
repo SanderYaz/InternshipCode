@@ -1,0 +1,289 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="row">
+  <div class="col-lg-12">
+
+    <div class="card" id="Update" *ngIf="!hide">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> <strong>Hasat Güncelleme Tablosu</strong>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <input matInput type="date" placeholder="Hasat Giriş Tarihi Seçiniz"
+                     [(ngModel)]="selectedHarvest.hasat_date">
+            </mat-form-field>
+          </div>
+          <div class="form-group col-md-6">
+            <mat-form-field class="form-container">
+              <input matInput placeholder="Hasat Saati" type="time" id="if" [(ngModel)]="selectedHarvest.harvest_hour">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="İrsaliye Numarası Giriniz" type="text" id="irsaliye"
+                   [(ngModel)]="selectedHarvest.irsaliye">
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Hasat Teknesi İsmini Giriniz" type="text" id="shipname"
+                   [(ngModel)]="selectedHarvest.shipname">
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Account Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedHarvest.account">
+              <mat-option *ngFor="let account of accounts" [value]="account.id">{{account.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Şirket Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedHarvest.company">
+              <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Tesis Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedHarvest.facility">
+              <div *ngFor="let facility of facilities">
+                <mat-option *ngIf="(selectedHarvest.company == facility.company)"
+                            [value]="facility.id">{{facility.name}} </mat-option>
+              </div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Barch Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedHarvest.unit">
+              <div *ngFor="let unit of units">
+                <mat-option *ngIf="(selectedHarvest.facility == unit.facility)"
+                            [value]="unit.id">{{unit.name}}</mat-option>
+              </div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Kafes Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedHarvest.tank">
+              <div *ngFor="let tank of tanks">
+                <mat-option *ngIf="(selectedHarvest.unit == tank.unit)" [value]="tank.id">{{tank.name}}</mat-option>
+              </div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Fish Operation</mat-label>
+            <mat-select [(ngModel)]="selectedHarvest.fishoperation" multiple>
+              <div *ngFor="let fishoperation of fishoperations">
+                <mat-option *ngIf="(selectedHarvest.tank == fishoperation.tank)"
+                            [value]="fishoperation.id">{{fishoperation.id}}</mat-option>
+              </div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Proje Adı Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedHarvest.project"><ng-container *ngFor="let fishoperation of fishoperations" >
+              <div *ngFor="let project of projects"><ng-container *ngIf="(selectedHarvest.fishoperation == fishoperation.id)"><mat-option *ngIf="fishoperation.project == project.id " [value]="project.id">{{project.name}}</mat-option></ng-container></div></ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Hasat Miktarları (Tahmini)</strong></label>
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th colspan="1" align="center">Hasat Miktarı (Liver)</th>
+              <th colspan="1" align="center">Ortalama Ağırlık(Kg)</th>
+              <th colspan="1" align="center">Toplam Ağırlık(Kg)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Liver Miktarı" type="text" id="weight"
+                         [(ngModel)]="selectedHarvest.weight">
+                </mat-form-field>
+              </td>
+
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Ortalama Ağırlık(Kg)" type="number" id="tahminiagirlik" disabled="disable" [value]="330.00">
+                </mat-form-field>
+              </td>
+
+              <td>
+                <mat-form-field class="form-container">
+                  <input matInput placeholder="Toplam Ağırlık(Kg)" id="harvest" type="number" disabled="disable"
+                         [value]="Hasatadet()">
+                </mat-form-field>
+              </td>
+
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="row">
+            <div class="form-group  col-sm-6">
+              <button type="button" class="btn btn-block btn-warning" id="harvest_update"
+                      *ngIf="selectedHarvest.id != -1"
+                      (click)="updateHarvest()"><strong>Güncelle</strong></button>
+            </div>
+            <div class="form-group  col-sm-6">
+              <button type="button" class="btn btn-block btn-danger" id="gizle"
+                      *ngIf="selectedHarvest.id != -1"
+                      (click)="hide =!hide"><strong>Kapat</strong></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> Hasat Rapor Sayfası
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-2" align="right">
+            <a href="/HarvestEntry_Create" class="btn btn-block btn-success">Hasat Girişi Ekle</a>
+          </div>
+          <mat-form-field class="form-group col-md-8">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+          <div class="form-group col-md-2">
+            <button type="button" class="btn btn-block btn-danger" id="yenile"
+                    *ngIf="selectedHarvest.id != -1"
+                    (click)="refreshtable()"><strong>Tabloyu Yenile</strong></button>
+          </div>
+        </div>
+        <div class='table-responsive mat-elevation-z8'>
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Hasat ID</th>
+              <td mat-cell *matCellDef="let harvest"> {{harvest.id}} </td>
+            </ng-container>
+            <ng-container matColumnDef="hasat_date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Hasat Giriş Tarihi</th>
+              <td mat-cell *matCellDef="let harvest"> {{harvest.hasat_date}} </td>
+            </ng-container>
+            <ng-container matColumnDef="harvest_hour">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Hasat Giriş Saati</th>
+              <td mat-cell *matCellDef="let harvest"> {{harvest.harvest_hour}} </td>
+            </ng-container>
+            <ng-container matColumnDef="irsaliye">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> İrsaliye Numarası</th>
+              <td mat-cell *matCellDef="let harvest"> {{harvest.irsaliye}} </td>
+            </ng-container>
+            <ng-container matColumnDef="shipname">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Hasat Teknesi</th>
+              <td mat-cell *matCellDef="let harvest"> {{harvest.shipname}} </td>
+            </ng-container>
+            <ng-container matColumnDef="account">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Account</th>
+              <td mat-cell *matCellDef="let harvest"> <span *ngFor="let account of accounts">
+                <tr *ngIf="(harvest.account == account.id)">{{account.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="fishoperation">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Balık Operation Id</th>
+              <td mat-cell *matCellDef="let harvest"> <span *ngFor="let fishoperation of fishoperations"><ng-container *ngFor="let fishtype of fishtypes">
+                <ng-container *ngIf="(harvest.fishoperation == fishoperation.id)"><tr *ngIf="(fishoperation.fish_type == fishtype.id)">{{fishoperation.id}}</tr></ng-container>
+              </ng-container></span></td>
+            </ng-container>
+            <!--
+            <ng-container matColumnDef="fishtype">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Balık Türü</th>
+              <td mat-cell *matCellDef="let harvest"> <span *ngFor="let fishoperation of fishoperations"><ng-container *ngFor="let fishtype of fishtypes">
+                <ng-container *ngIf="(harvest.fishoperation == fishoperation.id)"><tr *ngIf="(fishoperation.fish_type == fishtype.id)">{{fishtype.name}}</tr></ng-container>
+              </ng-container></span></td>
+            </ng-container>
+-->
+            <ng-container matColumnDef="facility">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Hasat Yapılan Tesis</th>
+              <td mat-cell *matCellDef="let harvest"> <span *ngFor="let facility of facilities">
+                <tr *ngIf="(harvest.facility == facility.id)">{{facility.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="unit">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Hasat Yapılan Ünite</th>
+              <td mat-cell *matCellDef="let harvest"> <span *ngFor="let unit of units">
+                <tr *ngIf="(harvest.unit == unit.id)">{{unit.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="tank">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Hasat Yapılan Kafes</th>
+              <td mat-cell *matCellDef="let harvest"> <span *ngFor="let tank of tanks">
+                <tr *ngIf="(harvest.tank == tank.id)">{{tank.name}}</tr>
+              </span></td>
+            </ng-container>
+
+            <ng-container matColumnDef="project">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Proje</th>
+              <td mat-cell *matCellDef="let harvest"> <span *ngFor="let project of projects">
+                <tr *ngIf="(harvest.project == project.id)">{{project.name}}</tr>
+              </span></td>
+            </ng-container>
+
+            <ng-container matColumnDef="weight">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Liver Miktarı</th>
+              <td mat-cell *matCellDef="let harvest"> {{harvest.weight}} </td>
+            </ng-container>
+            <ng-container matColumnDef="tahminiagirlik">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Ortalama Ağırlık</th>
+              <td mat-cell *matCellDef="let harvest"> {{harvest.tahminiagirlik}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tahminiadet">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Toplam Ağırlık</th>
+              <td mat-cell *matCellDef="let harvest"> {{harvest.tahminiadet}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="update">
+              <th mat-header-cell *matHeaderCellDef> Güncelle</th>
+              <td mat-cell *matCellDef="let harvest">
+                <button type="submit" class="btn btn-block btn-ghost-warning"
+                        *ngIf="selectedHarvest.id != -1" (click)="updateFunc(harvest)">
+                  <strong>Güncelle</strong></button>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Sil</th>
+              <td mat-cell *matCellDef="let harvest; let element">
+                <button type="reset" class="btn btn-block btn-ghost-danger"
+                        *ngIf="selectedHarvest.id != -1" (click)="deleteHarvest(harvest.id, element)">
+                  <strong>Sil</strong></button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          </table>
+        </div>
+        <mat-paginator [length]="100"
+                       [pageSize]="10"
+                       [pageSizeOptions]="[5, 10, 25, 100]">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+  <!--/.col-->
+</div>

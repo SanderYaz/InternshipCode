@@ -1,0 +1,112 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Stok Girişi Formu</strong>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="İrsaliye Numarası Giriniz" type="text" id="irsaliyeno"
+                 [(ngModel)]="selectedStockmovement.irsaliyeno">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Account Seçiniz</mat-label>
+          <mat-select [(ngModel)] ="selectedStockmovement.account">
+            <mat-option *ngFor="let account of accounts" value="{{account.id}}">{{account.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Şirket Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedStockmovement.targetcompany">
+              <mat-option *ngFor="let company of companies" value="{{company.id}}">{{company.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Tesis Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedStockmovement.targetfacility">
+              <div *ngFor="let facility of facilities"><mat-option *ngIf="(selectedStockmovement.targetcompany == facility.company)" value="{{facility.id}}">{{facility.name}}</mat-option></div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Barch Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedStockmovement.targetunit">
+              <div *ngFor="let unit of units"><mat-option *ngIf="(selectedStockmovement.targetfacility == unit.facility)" value="{{unit.id}}">{{unit.name}}</mat-option></div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Gideceği Kafes'i Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedStockmovement.targettank">
+              <div *ngFor="let tank of tanks"><mat-option *ngIf="(selectedStockmovement.targetunit == tank.unit)" value="{{tank.id}}">{{tank.name}}</mat-option></div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Stok Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStockmovement.stock" multiple>
+            <mat-option *ngFor="let stock of stocks" [value]="stock.id" > {{stock.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="card-body">
+        <table class="table table-bordered table-striped table-sm">
+          <thead>
+          <tr>
+            <th style="text-align: -webkit-center"> Stok İsmi</th>
+            <th style="text-align: -webkit-center">Stok Girişi İçin Miktar</th>
+            <th style="text-align: -webkit-center">Birim Seçiniz</th>
+          </tr>
+          <!-- unit'e bağlı stoklar geldi-->
+          <tr *ngFor="let stock of stocks; let i = index">
+
+            <div style="text-align: -webkit-center" *ngIf="(selectedStockmovement.stock[i] == stock.id)" multiple> {{stock.name}} </div>
+            <ng-container *ngIf="!((selectedStockmovement.stock[i] == stock.id) == 0)">
+                  <!-- stokta ne kadar kaldığını gösteriyor -->
+                  <!--Transfer edilecek miktar -->
+                  <th><input matinput type="number" class="form-control"  placeholder="Stok Girişi İçin Miktar" [(ngModel)]="kutucukSay[s]" ></th>
+                  <th><mat-form-field class="form-container">
+                    <mat-label>Stok Birimini Seçiniz (Ör: KG)</mat-label>
+                    <mat-select [(ngModel)]="metricSay[s]">
+                      <mat-option *ngFor="let metric of metrics" value="{{metric.id}}">{{metric.name}}
+                      </mat-option></mat-select></mat-form-field></th>
+                  <!-- stok id'sinin unit'e göre alınmış hali-->
+                  <div [hidden]='funcAdd(s, stock.id)'></div>
+            </ng-container></tr>
+          </thead>
+        </table>
+      </div>
+
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedStockmovement.id != -1"
+                  (click)="createStockmovement()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-warning" *ngIf="selectedStockmovement.id != -1"
+                  (click)="updateStockmovement()"><strong>Güncelle</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedStockmovement.id != -1"
+                  (click)="deleteStockmovement()"><strong>Sil</strong></button>
+        </div>
+      </div>
+    </div>

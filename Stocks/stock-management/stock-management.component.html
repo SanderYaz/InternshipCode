@@ -1,0 +1,154 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="row">
+  <div class="col-lg-12">
+    <!-- Raporlarda güncelleme sayfası -->
+    <div class="card" id="Update" *ngIf="!hide">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> <strong>Stok Yönetimi Güncelleme Tablosu</strong>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Şirket İsmi Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevel.company">
+            <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Birim İsmi Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedStocklevel.unit">
+              <mat-option *ngFor="let unit of units" [value]="unit.id">{{unit.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Stok İsmi Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedStocklevel.stock">
+              <mat-option *ngFor="let stock of stocks" [value]="stock.id">{{stock.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Miktar Giriniz" type="number" [(ngModel)]="selectedStocklevel.quantity"
+                   id="quantity">
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Ölçü Birimi Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedStocklevel.metric">
+              <mat-option *ngFor="let metric of metrics" [value]="metric.id">{{metric.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <button type="button" class="btn btn-block btn-warning" id="stocklevel_update"
+                    *ngIf="selectedStocklevel.id != -1"
+                    (click)="updateStocklevel(selectedStocklevel)"><strong>Güncelle</strong></button>
+          </div>
+          <div class="form-group col-md-6">
+            <button type="button" class="btn btn-block btn-danger" id="gizle"
+                    *ngIf="selectedStocklevel.id != -1"
+                    (click)="hide =!hide"><strong>Kapat</strong></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> Stok Yönetimi Tablosu
+      </div>
+      <br>
+
+      <div class="card-body">
+        <div class="row">
+          <mat-form-field class="form-group col-md-10">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+          <div class="form-group col-md-2">
+            <button type="button" class="btn btn-block btn-danger" id="yenile"
+                    *ngIf="selectedStocklevel.id != -1"
+                    (click)="refreshtable()"><strong>Tabloyu Yenile</strong></button>
+          </div>
+        </div>
+        <div class='table-responsive mat-elevation-z8'>
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stok Level Id  </th>
+              <td mat-cell *matCellDef="let stocklevels"> {{stocklevels.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sapcode">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> SAP Kodu</th>
+              <td mat-cell *matCellDef="let stocklevel"> <span *ngFor="let stock of stocks">
+                <tr *ngIf="(stocklevel.stock == stock.id)"> {{stock.sapstockcode}}</tr></span> </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="company">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Şirket İsmi </th>
+              <td mat-cell *matCellDef="let stocklevel"> <span *ngFor="let company of companies">
+                <tr *ngIf="(stocklevel.company == company.id)"> {{company.name}}</tr></span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="unit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Birim İsmi </th>
+            <td mat-cell *matCellDef="let stocklevel"> <span *ngFor="let unit of units">
+                <tr *ngIf="(stocklevel.unit == unit.id)"> {{unit.name}}</tr></span> </td>
+          </ng-container>
+
+            <ng-container matColumnDef="stock">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stok İsmi </th>
+              <td mat-cell *matCellDef="let stocklevel"> <span *ngFor="let stock of stocks">
+                <tr *ngIf="(stocklevel.stock == stock.id)"> {{stock.name}}</tr></span> </td>
+            </ng-container>
+
+              <ng-container matColumnDef="life_cycle">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>  Yaşam Dögüsü  </th>
+                <td mat-cell *matCellDef="let fishentry"> <span *ngFor="let lifecycle of lifecycles">
+                <div *ngFor="let i of [0,1,2,3,4,5,6,7]"><tr *ngIf="(fishentry.life_cycle[i] == lifecycle.id)">{{lifecycle.name}}</tr></div>
+              </span> </td>
+              </ng-container>
+
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Miktar  </th>
+              <td mat-cell *matCellDef="let stocklevels"> {{stocklevels.quantity}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="metric">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Ölçüm Birimi </th>
+              <td mat-cell *matCellDef="let stocklevel"> <span *ngFor="let metric of metrics">
+                <tr *ngIf="(stocklevel.metric == metric.id)"> {{metric.name}}</tr></span> </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="update">
+              <th mat-header-cell *matHeaderCellDef> Güncelle </th>
+              <td mat-cell *matCellDef="let stocklevels"><button type="button" class="btn btn-block btn-ghost-warning" *ngIf="selectedStocklevel.id != -1" (click)="updateFunc(stocklevels)"><strong>Güncelle</strong></button></td>
+            </ng-container>
+
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Sil </th>
+              <td mat-cell *matCellDef="let stocklevels; let element"><button type="reset" class="btn btn-block btn-ghost-danger" *ngIf="selectedStocklevel.id != -1" (click)="deleteStocklevel(stocklevels.id, element)"><strong>Sil</strong></button></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/.col-->
+</div>

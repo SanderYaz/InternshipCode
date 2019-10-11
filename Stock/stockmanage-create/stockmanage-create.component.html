@@ -1,0 +1,84 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Stok Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Şirket İsmi Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevel.company">
+            <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Tesis İsmi Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevel.facility">
+            <div *ngFor="let facility of facilities"><mat-option *ngIf="(selectedStocklevel.company == facility.company)" value="{{facility.id}}">{{facility.name}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Birim İsmi Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevel.unit">
+            <div *ngFor="let unit of units"><mat-option *ngIf="(selectedStocklevel.facility == unit.facility)" value="{{unit.id}}">{{unit.name}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Stok İsmi Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevel.stock">
+            <div *ngFor="let stock of stocks"><mat-option value="{{stock.id}}">{{stock.name}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Miktar Giriniz" type="number" [(ngModel)]="selectedStocklevel.quantity"
+                 id="quantity">
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Kullanılan Süreç | Süreçleri Seçiniz (life_cycle)</mat-label>
+          <mat-select [(value)]="selectedStocklevel.life_cycle" multiple>
+            <mat-option *ngFor="let lifecycle of lifecycles" [value]="lifecycle.id">{{lifecycle.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Ölçüm Birimi Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedStocklevel.metric">
+            <mat-option *ngFor="let metric of metrics" [value]="metric.id">{{metric.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+      <!--/.row-->
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" id="tank_save"
+                  *ngIf="selectedStocklevel.id != -1"
+                  (click)="createStocklevel()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedStocklevel.id != -1"
+                  onClick="window.location.reload()"><strong>Güncelle</strong></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

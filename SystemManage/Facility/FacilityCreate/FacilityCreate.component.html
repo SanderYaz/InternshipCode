@@ -1,0 +1,77 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Tesis Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+      <hr>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Şirket Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedFacility.company">
+            <mat-option *ngFor="let company of companies" value="{{company.id}}">{{company.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Tesis Türü Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedFacility.type">
+            <mat-option *ngFor="let facilitytype of facilitytypes" value="{{facilitytype.id}}">{{facilitytype.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Tesis İsmi Giriniz" type="text" id="facility_name"
+            [(ngModel)]="selectedFacility.name">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Tesis Sorumlu Mühendis Ad/Soyad Bilgilerini Giriniz" type="text"
+            [(ngModel)]="selectedFacility.responsible_engineer" id="facility_responsibleengineer">
+        </mat-form-field>
+      </div>
+
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Tesis Sorumlusu Ad/Soyad Bilgilerini Giriniz" type="text"
+            [(ngModel)]="selectedFacility.responsible_person" id="facility_responsibleperson">
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput maxlength="11" placeholder="Telefon Numarası" id="facility_phone" type="number"
+            [(ngModel)]="selectedFacility.phone">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <textarea matInput maxlength="100" placeholder="Adres" id="facility_address"
+            [(ngModel)]="selectedFacility.address"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Tesis Koordinat Bilgilerini Giriniz" type="text" id="facility_koordinat"
+          [(ngModel)]="selectedFacility.coordinate">
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedFacility.id != -1"
+            (click)="createFacility()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedCompany.id != -1"
+                  onClick="window.location.reload()"><strong>Yenile</strong></button>
+        </div>
+      </div>
+    </div>

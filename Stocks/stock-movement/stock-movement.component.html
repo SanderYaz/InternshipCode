@@ -1,0 +1,404 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="row">
+  <div class="col-lg-12">
+
+    <div class="card" id="Update" *ngIf="!hide">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> <strong>Stok Hareketleri Güncelleme Sayfası</strong>
+      </div>
+      <div class="card-body">
+          <div class="form-group">
+            <mat-form-field class="form-container">
+              <input matInput placeholder="Toplu Giriş Numarası Giriniz" type="text" id="movenumber"
+                     [(ngModel)]="selectedStockmovement.movenumber">
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field class="form-container">
+              <input matInput placeholder="İrsaliye Numarası Giriniz" type="text" id="irsaliyeno"
+                     [(ngModel)]="selectedStockmovement.irsaliyeno">
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field class="form-container">
+              <mat-label>Account Seçiniz</mat-label>
+              <mat-select [(ngModel)] ="selectedStockmovement.account">
+                <mat-option *ngFor="let account of accounts" [value]="account.id">{{account.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <mat-label>Geldiği Şirketi Seçiniz</mat-label>
+                <mat-select [(ngModel)]="selectedStockmovement.sourcecompany">
+                  <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <mat-label>Gideceği Şirketi Seçiniz</mat-label>
+                <mat-select [(ngModel)]="selectedStockmovement.targetcompany">
+                  <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <mat-label>Geldiği Tesisi Seçiniz</mat-label>
+                <mat-select [(ngModel)]="selectedStockmovement.sourcefacility">
+                  <div *ngFor="let facility of facilities"><mat-option *ngIf="(selectedStockmovement.sourcecompany == facility.company)" [value]="facility.id">{{facility.name}}</mat-option></div>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <mat-label>Gideceği Tesisi Seçiniz</mat-label>
+                <mat-select [(ngModel)]="selectedStockmovement.targetfacility">
+                  <div *ngFor="let facility of facilities"><mat-option *ngIf="(selectedStockmovement.targetcompany == facility.company)" [value]="facility.id">{{facility.name}}</mat-option></div>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <mat-label>Geldiği Birimi Seçiniz</mat-label>
+                <mat-select [(ngModel)]="selectedStockmovement.sourceunit">
+                  <div *ngFor="let unit of units"><mat-option *ngIf="(selectedStockmovement.sourcefacility == unit.facility)" [value]="unit.id">{{unit.name}}</mat-option></div>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <mat-label>Gideceği Barch'ı Seçiniz</mat-label>
+                <mat-select [(ngModel)]="selectedStockmovement.targetunit">
+                  <div *ngFor="let unit of units"><mat-option *ngIf="(selectedStockmovement.targetfacility == unit.facility)" [value]="unit.id">{{unit.name}}</mat-option></div>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <mat-label>Geldiği Tank'ı Seçiniz</mat-label>
+                <mat-select [(ngModel)]="selectedStockmovement.sourcetank">
+                  <div *ngFor="let tank of tanks"><mat-option *ngIf="(selectedStockmovement.sourceunit == tank.unit)" [value]="tank.id">{{tank.name}}</mat-option></div>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <mat-label>Gideceği Kafes'i Seçiniz</mat-label>
+                <mat-select [(ngModel)]="selectedStockmovement.targettank">
+                  <div *ngFor="let tank of tanks"><mat-option *ngIf="(selectedStockmovement.targetunit == tank.unit)" [value]="tank.id">{{tank.name}}</mat-option></div>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field class="form-container">
+              <mat-label>Stock İsmi Seçiniz</mat-label>
+              <mat-select [(ngModel)] ="selectedStockmovement.stock">
+                <mat-option *ngFor="let stock of stocks" [value]="stock.id">{{stock.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <input matInput placeholder="Stok Miktarı Giriniz" type="number" id="quantity"
+                       [(ngModel)]="selectedStockmovement.quantity">
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-6">
+              <mat-form-field class="form-container">
+                <mat-label>Stok Birimini Seçiniz (Ör: KG)</mat-label>
+                <mat-select [(ngModel)] ="selectedStockmovement.targetmetric">
+                  <mat-option *ngFor="let metric of metrics" [value]="metric.id">{{metric.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-4">
+              <mat-form-field class="form-container">
+                <mat-select placeholder="Transfer Girişi Mi?" type="text" [(ngModel)]="selectedStockmovement.is_transfer">
+                  <mat-option [value]= true> Evet </mat-option>
+                  <mat-option [value]= false> Hayır </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-4">
+              <mat-form-field class="form-container">
+                <mat-select placeholder="Stok Girişi Mi?" type="text" [(ngModel)]="selectedStockmovement.is_entry">
+                  <mat-option [value]= true> Evet </mat-option>
+                  <mat-option [value]= false> Hayır </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-4">
+              <mat-form-field class="form-container">
+                <mat-select placeholder="Stok Çıkışı Mı?" type="text" [(ngModel)]="selectedStockmovement.is_exit">
+                  <mat-option [value]= true> Evet </mat-option>
+                  <mat-option [value]= false> Hayır </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-3">
+              <mat-form-field class="form-container">
+                <mat-select placeholder="Stok Dönüşüm Mü?" type="text" [(ngModel)]="selectedStockmovement.is_stockconversion">
+                  <mat-option [value]= true> Evet </mat-option>
+                  <mat-option [value]= false> Hayır </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-3">
+              <mat-form-field class="form-container">
+                <mat-select placeholder="Sayım Girişi Mi?" type="text" [(ngModel)]="selectedStockmovement.is_countingentry">
+                  <mat-option [value]= true> Evet </mat-option>
+                  <mat-option [value]= false> Hayır </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-3">
+              <mat-form-field class="form-container">
+                <mat-select placeholder="Sayım Çıkışı Mı?" type="text" [(ngModel)]="selectedStockmovement.is_countingexit">
+                  <mat-option [value]= true> Evet </mat-option>
+                  <mat-option [value]= false> Hayır </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group col-md-3">
+              <mat-form-field class="form-container">
+                <mat-select placeholder="Silinsin Mi?" type="text" [(ngModel)]="selectedStockmovement.is_deleted">
+                  <mat-option [value]= true> Evet </mat-option>
+                  <mat-option [value]= false> Hayır </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+    <div class="row">
+      <div class="form-group  col-sm-6">
+        <button type="button" class="btn btn-block btn-warning" id="tank_update"
+                *ngIf="selectedTank.id != -1"
+                (click)="updateStockmovement(selectedStockmovement)"><strong>Güncelle</strong></button>
+      </div>
+      <div class="form-group  col-sm-6">
+        <button type="button" class="btn btn-block btn-danger" id="gizle"
+                *ngIf="selectedStockmovement.id != -1"
+                (click)="hide =!hide"><strong>Kapat</strong></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Rapor Sayfası -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> Stok Hareketleri
+      </div>
+      <div class="card-body">
+        <div class="row">
+        <div class="col-sm-3" align="right">
+          <a href="/stockmovement-create" class="btn btn-block btn-outline-dark">Stok Transferi</a>
+        </div>
+          <div class="col-sm-3" align="right">
+            <a href="/stockmovement-entry" class="btn btn-block btn-outline-dark">Stok Girişi</a>
+          </div>
+          <div class="col-sm-3" align="right">
+            <a href="/stockmovement-counting" class="btn btn-block btn-outline-dark">Stok Sayım Girişi</a>
+          </div>
+          <div class="col-sm-3" align="right">
+            <a href="/stockmovement-countingexit" class="btn btn-block btn-outline-dark">Stok Sayım Çıkışı</a>
+          </div>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+          <mat-form-field class="form-group col-md-9">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+          <div class="form-group col-md-3">
+            <button type="button" class="btn btn-block btn-danger" id="yenile"
+                    *ngIf="selectedStockmovement.id != -1"
+                    (click)="refreshtable()"><strong>Tabloyu Yenile</strong></button>
+          </div>
+        </div>
+        <div class='table-responsive mat-elevation-z8'>
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <!--render two parent headers-->
+            <ng-container matColumnDef="parent1">
+              <th mat-header-cell *matHeaderCellDef colspan="2" style="text-align: -webkit-center">Stok Hareketi</th>
+            </ng-container>
+            <ng-container matColumnDef="parent2">
+              <th mat-header-cell *matHeaderCellDef colspan="2" style="text-align: -webkit-center">Hesap</th>
+            </ng-container>
+            <ng-container matColumnDef="parent3">
+              <th mat-header-cell *matHeaderCellDef colspan="4" style="text-align: -webkit-center">Geldiği Yerler</th>
+            </ng-container>
+            <ng-container matColumnDef="parent4">
+              <th mat-header-cell *matHeaderCellDef colspan="4" style="text-align: -webkit-center">Gittiği Yerler</th>
+            </ng-container>
+            <ng-container matColumnDef="parent5">
+              <th mat-header-cell *matHeaderCellDef colspan="3" style="text-align: -webkit-center">Stok</th>
+            </ng-container>
+            <ng-container matColumnDef="parent6">
+              <th mat-header-cell *matHeaderCellDef colspan="8" style="text-align: -webkit-center">Özellikler</th>
+            </ng-container>
+
+            <ng-container matColumnDef="position">
+              <th mat-header-cell *matHeaderCellDef> No.</th>
+              <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="{{ displayName}}"
+                          *ngFor=" let displayName of ['name1','name2','name3'];index as i">
+              <th mat-header-cell *matHeaderCellDef> {{ displayName}}</th>
+              <td mat-cell *matCellDef="let srow">  {{ srow.names[i].name}}
+            </ng-container>
+            <! -- def two parent header columns-->
+            <tr mat-header-row *matHeaderRowDef=displayH
+                class="example-second-header-row">
+            </tr>
+            <!-- stok hareketi -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stok Hareketi Id</th>
+              <td mat-cell *matCellDef="let stockmovement"> {{stockmovement.id}} </td>
+            </ng-container>
+            <ng-container matColumnDef="account">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Hesap İsmi</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let account of accounts">
+                <tr *ngIf="(stockmovement.account == account.id)">{{account.name}}</tr>
+              </span></td>
+            </ng-container>
+            <!-- hesap bilgileri -->
+            <ng-container matColumnDef="movenumber">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Toplu Giriş Numarası </th>
+              <td mat-cell *matCellDef="let stockmovement"> {{stockmovement.movenumber}} </td>
+            </ng-container>
+            <ng-container matColumnDef="irsaliyeno">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> İrsaliye Numarası </th>
+              <td mat-cell *matCellDef="let stockmovement"> {{stockmovement.irsaliyeno}} </td>
+            </ng-container>
+            <!-- geldiği yerler -->
+            <ng-container matColumnDef="sourcecompany">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Geldiği Şirket</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let company of companies">
+                <tr *ngIf="(stockmovement.sourcefacility == company.id)">{{company.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="sourcefacility">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Geldiği Tesis</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let facility of facilities">
+                <tr *ngIf="(stockmovement.sourcefacility == facility.id)">{{facility.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="sourceunit">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Geldiği Unit</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let unit of units">
+                <tr *ngIf="(stockmovement.sourceunit == unit.id)">{{unit.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="sourcetank">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Geldiği Tank</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let tank of tanks">
+                <tr *ngIf="(stockmovement.sourcetank == tank.id)">{{tank.name}}</tr>
+              </span></td>
+            </ng-container>
+            <!-- gittiği yerler -->
+            <ng-container matColumnDef="targetcompany">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Gideceği Şirket</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let company of companies">
+                <tr *ngIf="(stockmovement.targetcompany == company.id)">{{company.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="targetfacility">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Gideceği Tesis</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let facility of facilities">
+                <tr *ngIf="(stockmovement.targetfacility == facility.id)">{{facility.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="targetunit">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Gideceği Unit</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let unit of units">
+                <tr *ngIf="(stockmovement.targetunit == unit.id)">{{unit.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="targettank">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Gideceği Tank</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let tank of tanks">
+                <tr *ngIf="(stockmovement.targettank == tank.id)">{{tank.name}}</tr>
+              </span></td>
+            </ng-container>
+            <!-- stok -->
+            <ng-container matColumnDef="stockname">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stok İsmi</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let stock of stocks">
+                <tr *ngIf="(stockmovement.stock == stock.id)">{{stock.name}}</tr>
+              </span></td>
+            </ng-container>
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stok Miktarı </th>
+              <td mat-cell *matCellDef="let stockmovement"> {{stockmovement.quantity}} </td>
+            </ng-container>
+            <ng-container matColumnDef="metric">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Miktar Birimi</th>
+              <td mat-cell *matCellDef="let stockmovement"> <span *ngFor="let metric of metrics">
+                <tr *ngIf="(stockmovement.targetmetric == metric.id)">{{metric.name}}</tr>
+              </span></td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="detail">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Detaylar</th>
+              <td mat-cell *matCellDef="let stockmovement">
+                <button type="submit" class="btn btn-block btn-ghost-success" *ngIf="selectedStockmovement.id != -1"
+                        (click)="Detail()"><strong> Detaylar</strong></button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="update">
+              <th mat-header-cell *matHeaderCellDef> Güncelle</th>
+              <td mat-cell *matCellDef="let stockmovement">
+                <button type="submit" class="btn btn-block btn-ghost-warning" *ngIf="selectedStockmovement.id != -1"
+                        (click)="updateFunc(stockmovement)"><strong>Güncelle</strong></button>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Sil</th>
+              <td mat-cell *matCellDef="let stockmovement; let element">
+                <button type="reset" class="btn btn-block btn-ghost-danger" *ngIf="selectedStockmovement.id != -1"
+                        (click)="deleteStockmovement(stockmovement.id, element)"><strong>Sil</strong></button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="display"></tr>
+            <tr mat-row *matRowDef="let row; columns: display;"></tr>
+
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

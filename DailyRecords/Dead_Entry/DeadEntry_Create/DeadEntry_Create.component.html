@@ -1,0 +1,80 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Ölü Girişi Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput type="date" [(ngModel)]="selectedMortality.date" placeholder="Ölü Giriş Tarihi Seçiniz"  >
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Şirket Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedMortality.company">
+            <mat-option *ngFor="let company of companies" value="{{company.id}}">{{company.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Tesis Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedMortality.facility">
+            <div *ngFor="let facility of facilities">
+              <mat-option *ngIf="(selectedMortality.company == facility.company)"
+                          value="{{facility.id}}">{{facility.name}} </mat-option>
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Barch Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedMortality.unit">
+            <div *ngFor="let unit of units">
+              <mat-option *ngIf="(selectedMortality.facility == unit.facility)"
+                          value="{{unit.id}}">{{unit.name}}</mat-option>
+            </div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Balık Türü Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedMortality.fish">
+            <div *ngFor="let fishtype of fishtypes"> <mat-option value="{{fishtype.id}}">{{fishtype.name}}</mat-option></div>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+      <div class="card-body">
+        <table class="table table-bordered table-striped table-sm">
+          <thead>
+          <tr>
+            <th align="center"> Kafes İsmi </th>
+            <th align="center" >  Kafes Kodu  </th>
+            <ng-container *ngFor="let mortalitytype of mortalitytypes">
+              <th align="center" *ngIf="(mortalitytype.life_cycle == 5)">{{mortalitytype.name}}</th>
+            </ng-container>
+          </tr>
+          <ng-container *ngFor="let fishoperation of fishoperations, let s = index"><ng-container *ngFor="let tank of tanks, let i = index"  align="center"><ng-container align="center" *ngIf="(fishoperation.tank == tank.id)"><ng-container align="center" *ngIf="(fishoperation.fish_type == selectedMortality.fish)"><tr *ngIf="(selectedMortality.unit == tank.unit)" id="veriable" align="center"><strong>{{tank.name}}</strong>
+            <ng-container align="center" *ngIf="(fishoperation.tank == tank.id)"><th align="center" *ngIf="(fishoperation.fish_type == selectedMortality.fish)" > {{fishoperation.kafeskodu}} </th></ng-container>
+            <ng-container *ngFor="let mortalitytype of mortalitytypes, let j = index"><th align="center" *ngIf="(mortalitytype.life_cycle == 5)"><div [hidden]='funcAdd(tank.id, mortalitytype.id, (i+(j*100)), fishoperation.id)'><input type="number" class="form-control" id="deneme2" placeholder="Adet" [(ngModel)]="kutucukSay[i+(j*100)]"></div></th></ng-container></tr></ng-container></ng-container></ng-container></ng-container>
+          </thead>
+        </table>
+      </div>
+
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedMortality.id != -1"
+                  (click)="createMortalityentry()"><strong>Kaydet</strong></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Tesis Türü Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Tesis Türü Giriniz" type="text" [(ngModel)]="selectedFacilitytype.name"
+            id="facilitytype_name">
+        </mat-form-field>
+      </div>
+
+
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedFacilitytype.id != -1"
+            (click)="createFacilitytype()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-warning" *ngIf="selectedFacilitytype.id != -1"
+            (click)="updateFacilitytype()"><strong>Güncelle</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedFacilitytype.id != -1"
+            (click)="deleteFacilitytype()"><strong>Sil</strong></button>
+        </div>
+      </div>
+    </div>

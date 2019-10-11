@@ -1,0 +1,180 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="row">
+  <div class="col-lg-12">
+
+    <div class="card" id="Update" *ngIf="!hide">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> <strong>Ölü Girişi Güncelleme Sayfası</strong>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput type="date" [(ngModel)]="selectedMortality.date" placeholder="Ölü Giriş Tarihi Seçiniz"  >
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Şirket Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedMortality.company">
+              <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Tesis Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedMortality.facility">
+              <div *ngFor="let facility of facilities">
+                <mat-option *ngIf="(selectedMortality.company == facility.company)"
+                            [value]="facility.id">{{facility.name}} </mat-option>
+              </div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Barch Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedMortality.unit">
+              <div *ngFor="let unit of units">
+                <mat-option *ngIf="(selectedMortality.facility == unit.facility)"
+                            [value]="unit.id">{{unit.name}}</mat-option>
+              </div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Kafes Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedMortality.tank">
+              <div *ngFor="let tank of tanks"><mat-option *ngIf="(selectedMortality.unit == tank.unit)" [value]="tank.id">{{tank.name}}</mat-option></div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <mat-label>Balık Türü Seçiniz</mat-label>
+            <mat-select [(ngModel)]="selectedMortality.fishopr"><ng-container *ngFor="let fishoperation of fishoperations"><ng-container *ngIf="selectedMortality.fishopr == fishoperation.id">
+              <div *ngFor="let fishtype of fishtypes"> <mat-option *ngIf="(fishoperation.fish_type == fishtype.id)" [value]="fishtype.id">{{fishtype.name}}</mat-option></div></ng-container></ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="form-container">
+            <input matInput placeholder="Ölüm Adedi Giriniz" type="number" id="1"
+                   [(ngModel)]="selectedMortality.quantity">
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <div class="form-group  col-sm-6">
+            <button type="button" class="btn btn-block btn-warning" id="tank_update"
+                    *ngIf="selectedTank.id != -1"
+                    (click)="updateMortalityentry()"><strong>Güncelle</strong></button>
+          </div>
+          <div class="form-group  col-sm-6">
+            <button type="button" class="btn btn-block btn-danger" id="gizle"
+                    *ngIf="selectedMortality.id != -1"
+                    (click)="hide =!hide"><strong>Kapat</strong></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i>Ölü Giriş Tablosu
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-2" align="right" >
+            <a href="/DeadEntry_Create" class="btn btn-block btn-success">Ölü Giriş Bilgisi Ekle</a>
+          </div>
+          <mat-form-field class="form-group col-md-8">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+          <div class="form-group col-md-2">
+            <button type="button" class="btn btn-block btn-danger" id="yenile"
+                    *ngIf="selectedMortality.id != -1"
+                    (click)="refreshtable()"><strong>Tabloyu Yenile</strong></button>
+          </div>
+        </div>
+        <div class='table-responsive mat-elevation-z8'>
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Ölü Giriş ID </th>
+              <td mat-cell *matCellDef="let mortalityentry"> {{mortalityentry.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Ölü Tarihi </th>
+              <td mat-cell *matCellDef="let mortalityentry"> {{mortalityentry.date}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="company">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Şirket İsmi </th>
+              <td mat-cell *matCellDef="let mortalityentry"> <span *ngFor="let company of companies">
+                <tr *ngIf="(mortalityentry.company == company.id)">{{company.name}}</tr>
+              </span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="facility">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Tesis İsmi </th>
+              <td mat-cell *matCellDef="let mortalityentry"> <span *ngFor="let facility of facilities">
+                <tr *ngIf="(mortalityentry.facility == facility.id)">{{facility.name}}</tr>
+              </span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="unit">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Barch İsmi </th>
+              <td mat-cell *matCellDef="let mortalityentry"> <span *ngFor="let unit of units">
+                <tr *ngIf="(mortalityentry.unit == unit.id)">{{unit.name}}</tr>
+              </span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tank">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Kafes İsmi </th>
+              <td mat-cell *matCellDef="let mortalityentry"> <span *ngFor="let tank of tanks">
+                <tr *ngIf="(mortalityentry.tank == tank.id)">{{tank.name}}</tr>
+              </span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mortalitytype">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Ölüm Türü </th>
+              <td mat-cell *matCellDef="let mortalityentry"> <span *ngFor="let mortalitytype of mortalitytypes">
+                <tr *ngIf="(mortalityentry.mortalitytype == mortalitytype.id)">{{mortalitytype.name}}</tr>
+              </span> </td>
+            </ng-container>
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Ölüm Adedi</th>
+              <td mat-cell *matCellDef="let mortalityentry"> {{mortalityentry.quantity}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fishopr">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Operasyon Id </th>
+              <td mat-cell *matCellDef="let mortalityentry"> {{mortalityentry.fishopr}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="update">
+              <th mat-header-cell *matHeaderCellDef > Güncelle </th>
+              <td mat-cell *matCellDef="let mortalityentry"><button type="submit" class="btn btn-block btn-ghost-warning" *ngIf="selectedMortality.id != -1" (click)="updateFunc(mortalityentry)"><strong>Güncelle</strong></button></td>
+            </ng-container>
+
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Sil </th>
+              <td mat-cell *matCellDef="let mortalityentry; let element"><button type="reset" class="btn btn-block btn-ghost-danger" *ngIf="selectedMortality.id != -1" (click)="deleteMortalityentry(mortalityentry.id, element)"><strong>Sil</strong></button></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!--/.col-->
+</div>

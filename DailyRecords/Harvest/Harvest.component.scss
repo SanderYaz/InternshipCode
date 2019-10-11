@@ -1,0 +1,46 @@
+.mat-row:nth-child(odd) {
+  background: #eee;
+}
+.mat-row.mat-row.ng-star-inserted {
+  border: 0;
+}
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-container > * {
+  width: 100%;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  overflow: auto;
+  text-align: center;
+}
+
+td, th {
+  text-align: center;
+  border: 1px solid #dddddd;
+  padding: 8px;
+  height: 20px;
+  overflow: auto;
+}
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container > * {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}

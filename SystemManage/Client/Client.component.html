@@ -1,0 +1,72 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Client Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+
+      <ul>
+        <li *ngFor="let client of clients">
+          <h4 (click)="clientClicked(client)">{{client.name}}</h4>
+        </li>
+      </ul>
+      <hr>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Client ID" type="text" [(ngModel)]="selectedClient.id" id="clientid">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Client İsmi Giriniz" type="text" maxlength="50" id="clientname"
+            [(ngModel)]="selectedClient.name">
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Sorumlu Kişi Ad/Soyad Bilgilerini Giriniz" type="text" maxlength="20"
+            [(ngModel)]="selectedClient.responsible_person" id="clientresponsible">
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput type="number" maxlength="11" placeholder="Telefon Numarası"
+            [(ngModel)]="selectedClient.phone" id="clientphone">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <textarea matInput maxlength="100" placeholder="Adres" [(ngModel)]="selectedClient.address" id="clientaddress"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput type="text" maxlength="20" placeholder="Vergi Dairesi"
+            [(ngModel)]="selectedClient.tax_office" id="clienttax">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Vergi Numarası | TC Numarası" type="number" maxlength="11"
+            [(ngModel)]="selectedClient.tax_number" id="clienttaxnumber">
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedClient.id != -1"
+            (click)="createClient()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-warning" *ngIf="selectedClient.id != -1"
+            (click)="updateClient()"><strong>Güncelle</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedClient.id != -1"
+            (click)="deleteClient()"><strong>Sil</strong></button>
+        </div>
+      </div>
+    </div>

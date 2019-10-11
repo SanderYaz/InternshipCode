@@ -1,0 +1,46 @@
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
+<div class="col-sm-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Birim Kayıt Sayfası</strong>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <mat-label>Şirket Seçiniz</mat-label>
+          <mat-select [(ngModel)]="selectedUnit.company">
+            <mat-option *ngFor="let company of companies" value="{{company.id}}">{{company.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+       <mat-form-field class="form-container">
+         <mat-label>Tesis İsmi Seçiniz</mat-label>
+         <mat-select [(ngModel)]="selectedUnit.facility">
+           <div *ngFor="let facility of facilities"><mat-option *ngIf="(selectedUnit.company == facility.company)" value="{{facility.id}}">{{facility.name}}</mat-option></div>
+         </mat-select>
+       </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Birim İsmi Giriniz" type="text" maxlength="60" [(ngModel)]="selectedUnit.name"
+            id="unitname">
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="form-container">
+          <input matInput placeholder="Açıklamayı Giriniz" type="text" [(ngModel)]="selectedUnit.description"
+            id="description">
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <div class="form-container col-sm-3">
+          <button type="submit" class="btn btn-block btn-success" *ngIf="selectedUnit.id != -1"
+            (click)="createUnit()"><strong>Kaydet</strong></button>
+        </div>
+        <div class="form-container col-sm-3">
+          <button type="reset" class="btn btn-block btn-danger" *ngIf="selectedCompany.id != -1"
+                  onClick="window.location.reload()"><strong>Yenile</strong></button>
+        </div>
+      </div>
